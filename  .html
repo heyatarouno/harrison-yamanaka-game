@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ハリソン山中ゲーム</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#F6F3EC;
+  --card:#FFFFFF;
+  --border:#DDD6C5;
+  --text:#221B12;
+  --text-secondary:#7A7263;
+  --accent:#B5472B;
+  --accent-bg:#F4E2DA;
+  --accent-text:#7A2C18;
+  --success:#3F6B3F;
+  --gold:#B8902E;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1B1712;
+    --card:#262019;
+    --border:#3A3327;
+    --text:#F1ECE1;
+    --text-secondary:#A89F8C;
+    --accent:#E07A52;
+    --accent-bg:#3A2620;
+    --accent-text:#F2B79A;
+    --success:#7FBF7F;
+    --gold:#D8B65A;
+  }
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  display:flex;
+  justify-content:center;
+}
+.wrap{
+  width:100%;
+  max-width:480px;
+  padding:24px 16px 60px;
+}
+header{
+  text-align:center;
+  margin-bottom:24px;
+}
+header h1{
+  font-size:22px;
+  font-weight:700;
+  margin:0 0 4px;
+  letter-spacing:0.02em;
+}
+header p{
+  font-size:13px;
+  color:var(--text-secondary);
+  margin:0;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+}
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0;
+  border-top:1px solid var(--border);
+}
+.row:first-child{border-top:none;}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  padding:4px 10px;
+  border-radius:8px;
+  background:var(--accent-bg);
+  color:var(--accent-text);
+}
+.label{
+  font-size:13px;
+  color:var(--text-secondary);
+  margin:0 0 8px;
+}
+.muted{
+  font-size:13px;
+  color:var(--text-secondary);
+  margin:0 0 12px;
+}
+button{
+  cursor:pointer;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:10px;
+  padding:11px 14px;
+  font-size:15px;
+  font-family:inherit;
+  transition:background .15s,border-color .15s;
+}
+button:hover{ background:var(--accent-bg); }
+button:active{ transform:scale(0.98); }
+button.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+  font-weight:600;
+}
+button.primary:hover{ opacity:0.92; background:var(--accent); }
+button.active{
+  background:var(--accent-bg);
+  border-color:var(--accent);
+  color:var(--accent-text);
+}
+input[type=text]{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--text);
+  font-size:15px;
+  font-family:inherit;
+}
+input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+.btnrow{ display:flex; gap:8px; }
+.field{ margin-bottom:10px; }
+.field label{
+  display:block;
+  font-size:13px;
+  color:var(--text-secondary);
+  margin-bottom:4px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>ハリソン山中ゲーム</h1>
+<p>1台の端末を回して遊ぶパーティーゲーム</p>
+</header>
+<div id="app"></div>
+</div>
+<script>
+(function(){
+
+var WORDS = [
+["りんご","果物"],["バナナ","果物"],["ぶどう","果物"],["みかん","果物"],["パイナップル","果物"],
+["メロン","果物"],["いちご","果物"],["もも","果物"],["さくらんぼ","果物"],["レモン","果物"],
+["ライオン","動物"],["パンダ","動物"],["キリン","動物"],["ペンギン","動物"],["ゾウ","動物"],
+["コアラ","動物"],["カンガルー","動物"],["イルカ","動物"],["フクロウ","動物"],["ウサギ","動物"],
+["寿司","食べ物"],["ラーメン","食べ物"],["カレー","食べ物"],["ピザ","食べ物"],["おにぎり","食べ物"],
+["たこ焼き","食べ物"],["餃子","食べ物"],["ハンバーガー","食べ物"],["アイスクリーム","食べ物"],["焼肉","食べ物"],
+["医者","職業"],["消防士","職業"],["パイロット","職業"],["美容師","職業"],["弁護士","職業"],
+["警察官","職業"],["教師","職業"],["シェフ","職業"],["漫画家","職業"],["俳優","職業"],
+["サッカー","スポーツ"],["野球","スポーツ"],["テニス","スポーツ"],["バスケットボール","スポーツ"],["水泳","スポーツ"],
+["卓球","スポーツ"],["ゴルフ","スポーツ"],["ボクシング","スポーツ"],["スキー","スポーツ"],["マラソン","スポーツ"],
+["スマートフォン","日用品"],["傘","日用品"],["自転車","日用品"],["めがね","日用品"],["腕時計","日用品"],
+["冷蔵庫","日用品"],["掃除機","日用品"],["ヘッドホン","日用品"],["タオル","日用品"],["鏡","日用品"],
+["富士山","場所"],["東京タワー","場所"],["海","場所"],["図書館","場所"],["遊園地","場所"],
+["温泉","場所"],["神社","場所"],["動物園","場所"],["空港","場所"],["映画館","場所"]
+];
+
+var state = {
+  screen: "setupPlayers",
+  numPlayers: 4,
+  names: ["プレイヤー1","プレイヤー2","プレイヤー3","プレイヤー4","プレイヤー5"],
+  laps: 2,
+  players: [],
+  order: [],
+  roundIndex: 0,
+  wordPool: [],
+  currentWord: null,
+  selected: {},
+  lastRound: null
+};
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function shuffle(arr){
+  var a = arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t=a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+function setPlayerCount(n){
+  state.numPlayers = n;
+  render();
+}
+
+function setName(i,val){
+  state.names[i] = val;
+}
+
+function goSetupRounds(){
+  for(var i=0;i<state.numPlayers;i++){
+    if(!state.names[i] || !state.names[i].trim()){
+      state.names[i] = "プレイヤー"+(i+1);
+    }
+  }
+  state.screen = "setupRounds";
+  render();
+}
+
+function backToPlayers(){
+  state.screen = "setupPlayers";
+  render();
+}
+
+function setLaps(n){
+  state.laps = n;
+  render();
+}
+
+function startGame(){
+  state.players = [];
+  for(var i=0;i<state.numPlayers;i++){
+    state.players.push({name: state.names[i].trim() || ("プレイヤー"+(i+1)), score: 0});
+  }
+  state.order = [];
+  for(var lap=0; lap<state.laps; lap++){
+    for(var p=0; p<state.numPlayers; p++){
+      state.order.push(p);
+    }
+  }
+  state.wordPool = shuffle(WORDS);
+  state.roundIndex = 0;
+  beginRound();
+}
+
+function nextWord(){
+  if(state.wordPool.length === 0){
+    state.wordPool = shuffle(WORDS);
+  }
+  return state.wordPool.pop();
+}
+
+function beginRound(){
+  var pair = nextWord();
+  state.currentWord = {w: pair[0], g: pair[1]};
+  state.selected = {};
+  state.screen = "roundIntro";
+  render();
+}
+
+function revealWord(){
+  state.screen = "wordReveal";
+  render();
+}
+
+function toGuessSelect(){
+  state.screen = "guessSelect";
+  render();
+}
+
+function toggleCorrect(i){
+  state.selected[i] = !state.selected[i];
+  render();
+}
+
+function confirmRound(){
+  var harrisonIdx = state.order[state.roundIndex];
+  var correctIdx = [];
+  for(var key in state.selected){
+    if(state.selected[key]){ correctIdx.push(parseInt(key,10)); }
+  }
+  for(var i=0;i<correctIdx.length;i++){
+    state.players[correctIdx[i]].score += 1;
+  }
+  state.players[harrisonIdx].score += correctIdx.length;
+  state.lastRound = {
+    harrisonIdx: harrisonIdx,
+    word: state.currentWord,
+    correctIdx: correctIdx
+  };
+  state.screen = "roundResult";
+  render();
+}
+
+function nextRoundOrFinish(){
+  if(state.roundIndex + 1 < state.order.length){
+    state.roundIndex += 1;
+    beginRound();
+  } else {
+    state.screen = "finalResults";
+    render();
+  }
+}
+
+function resetGame(){
+  state.screen = "setupPlayers";
+  state.players = [];
+  state.roundIndex = 0;
+  render();
+}
+
+function scoreboard(highlightIdx){
+  var rows = "";
+  for(var i=0;i<state.players.length;i++){
+    var p = state.players[i];
+    var hi = (i===highlightIdx);
+    rows += '<div class="row">'
+      + '<span style="font-size:14px;'+(hi?'font-weight:600;':'')+'">'+esc(p.name)+(hi?' <i class="ti ti-microphone-2" style="font-size:14px;color:var(--text-secondary);"></i>':'')+'</span>'
+      + '<span style="font-size:14px;font-weight:600;">'+p.score+'</span>'
+      + '</div>';
+  }
+  return '<div class="card" style="margin-top:14px;">'
+    + '<p class="label">スコア</p>'
+    + rows
+    + '</div>';
+}
+
+function progressChip(){
+  var lap = Math.floor(state.roundIndex/state.numPlayers)+1;
+  return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">'
+    + '<span class="chip"><i class="ti ti-repeat" style="font-size:14px;"></i>'+lap+' / '+state.laps+' 周</span>'
+    + '<span class="chip"><i class="ti ti-flag" style="font-size:14px;"></i>ラウンド '+(state.roundIndex+1)+' / '+state.order.length+'</span>'
+    + '</div>';
+}
+
+function renderSetupPlayers(){
+  var counts = [3,4,5];
+  var btns = "";
+  for(var i=0;i<counts.length;i++){
+    var n = counts[i];
+    btns += '<button class="'+(state.numPlayers===n?'active':'')+'" style="flex:1;" onclick="hyGame.setPlayerCount('+n+')">'+n+'人</button>';
+  }
+  var inputs = "";
+  for(var j=0;j<state.numPlayers;j++){
+    inputs += '<div class="field">'
+      + '<label>プレイヤー'+(j+1)+'</label>'
+      + '<input type="text" value="'+esc(state.names[j])+'" placeholder="プレイヤー'+(j+1)+'" oninput="hyGame.setName('+j+',this.value)" />'
+      + '</div>';
+  }
+  return '<div class="card">'
+    + '<p class="label"><i class="ti ti-users" style="font-size:14px;vertical-align:-2px;margin-right:4px;"></i>人数を選ぶ</p>'
+    + '<div class="btnrow" style="margin-bottom:16px;">'+btns+'</div>'
+    + inputs
+    + '<button class="primary" style="width:100%;margin-top:8px;" onclick="hyGame.goSetupRounds()">次へ<i class="ti ti-arrow-right" style="font-size:14px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div>';
+}
+
+function renderSetupRounds(){
+  var counts = [1,2,3,4,5];
+  var btns = "";
+  for(var i=0;i<counts.length;i++){
+    var n = counts[i];
+    btns += '<button class="'+(state.laps===n?'active':'')+'" style="flex:1;" onclick="hyGame.setLaps('+n+')">'+n+'</button>';
+  }
+  return '<div class="card">'
+    + '<p class="label"><i class="ti ti-repeat" style="font-size:14px;vertical-align:-2px;margin-right:4px;"></i>何周する？（全員が1回ハリソン山中になるのが1周）</p>'
+    + '<div class="btnrow" style="margin-bottom:14px;">'+btns+'</div>'
+    + '<p class="muted">合計ラウンド数: '+(state.laps*state.numPlayers)+'</p>'
+    + '<div class="btnrow">'
+    + '<button style="flex:1;" onclick="hyGame.backToPlayers()">戻る</button>'
+    + '<button class="primary" style="flex:2;" onclick="hyGame.startGame()">ゲーム開始<i class="ti ti-player-play" style="font-size:14px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div></div>';
+}
+
+function renderRoundIntro(){
+  var harrisonIdx = state.order[state.roundIndex];
+  var harrison = state.players[harrisonIdx];
+  return progressChip()
+    + '<div class="card" style="text-align:center;">'
+    + '<p class="label">今回のハリソン山中</p>'
+    + '<p style="font-size:22px;font-weight:700;margin:0 0 14px;">'+esc(harrison.name)+'</p>'
+    + '<p class="muted">端末を'+esc(harrison.name)+'さんに渡してください。他の人は画面を見ないでください。</p>'
+    + '<button class="primary" style="width:100%;" onclick="hyGame.revealWord()"><i class="ti ti-eye" style="font-size:14px;margin-right:4px;vertical-align:-2px;"></i>お題を見る</button>'
+    + '</div>'
+    + scoreboard(harrisonIdx);
+}
+
+function renderWordReveal(){
+  var harrisonIdx = state.order[state.roundIndex];
+  var harrison = state.players[harrisonIdx];
+  return progressChip()
+    + '<div class="card" style="text-align:center;">'
+    + '<p class="label">ジャンル</p>'
+    + '<p style="font-size:16px;margin:0 0 18px;">'+esc(state.currentWord.g)+'</p>'
+    + '<p class="label">お題</p>'
+    + '<p style="font-size:30px;font-weight:700;margin:0 0 18px;color:var(--accent);">'+esc(state.currentWord.w)+'</p>'
+    + '<p class="muted">'+esc(harrison.name)+'さんは、このお題を「ハリソン山中」風の言い回しで表現してください。表現し終えたら次へ。</p>'
+    + '<button class="primary" style="width:100%;" onclick="hyGame.toGuessSelect()">表現し終えた<i class="ti ti-arrow-right" style="font-size:14px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div>';
+}
+
+function renderGuessSelect(){
+  var harrisonIdx = state.order[state.roundIndex];
+  var rows = "";
+  var anyOther = false;
+  for(var i=0;i<state.players.length;i++){
+    if(i === harrisonIdx) continue;
+    anyOther = true;
+    var on = !!state.selected[i];
+    rows += '<button class="'+(on?'active':'')+'" style="width:100%;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;" onclick="hyGame.toggleCorrect('+i+')">'
+      + '<span>'+esc(state.players[i].name)+'</span>'
+      + (on?'<i class="ti ti-check" style="font-size:16px;"></i>':'')
+      + '</button>';
+  }
+  var count = 0;
+  for(var k in state.selected){ if(state.selected[k]) count++; }
+  return progressChip()
+    + '<div class="card">'
+    + '<p class="label">正解</p>'
+    + '<p style="font-size:18px;font-weight:700;margin:0 0 16px;">'+esc(state.currentWord.w)+'<span style="font-size:13px;color:var(--text-secondary);font-weight:400;"> （'+esc(state.currentWord.g)+'）</span></p>'
+    + '<p class="label">正解した人を選んでください</p>'
+    + (anyOther ? rows : '<p class="muted">他のプレイヤーがいません</p>')
+    + '<button class="primary" style="width:100%;margin-top:4px;" onclick="hyGame.confirmRound()">確定（'+count+'人正解）<i class="ti ti-check" style="font-size:14px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div>';
+}
+
+function renderRoundResult(){
+  var lr = state.lastRound;
+  var harrison = state.players[lr.harrisonIdx];
+  var names = [];
+  for(var i=0;i<lr.correctIdx.length;i++){
+    names.push(state.players[lr.correctIdx[i]].name);
+  }
+  var isLast = (state.roundIndex + 1 >= state.order.length);
+  return progressChip()
+    + '<div class="card">'
+    + '<p class="label">お題</p>'
+    + '<p style="font-size:18px;font-weight:700;margin:0 0 12px;">'+esc(lr.word.w)+'<span style="font-size:13px;color:var(--text-secondary);font-weight:400;"> （'+esc(lr.word.g)+'）</span></p>'
+    + '<p style="font-size:14px;margin:0 0 4px;">正解者: '+(names.length? esc(names.join("、")) : "なし")+'</p>'
+    + '<p style="font-size:14px;margin:0 0 16px;color:var(--success);">'+esc(harrison.name)+'さんに +'+lr.correctIdx.length+'点</p>'
+    + '<button class="primary" style="width:100%;" onclick="hyGame.nextRoundOrFinish()">'+(isLast? '結果を見る' : '次のラウンドへ')+'<i class="ti ti-arrow-right" style="font-size:14px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div>'
+    + scoreboard(-1);
+}
+
+function renderFinalResults(){
+  var ranked = state.players.map(function(p,i){ return {name:p.name, score:p.score, idx:i}; });
+  ranked.sort(function(a,b){ return b.score - a.score; });
+  var top = ranked.length ? ranked[0].score : 0;
+  var rows = "";
+  for(var i=0;i<ranked.length;i++){
+    var isWinner = ranked[i].score === top;
+    rows += '<div class="row">'
+      + '<span style="font-size:14px;'+(isWinner?'font-weight:700;':'')+'">'+(i+1)+'. '+esc(ranked[i].name)+(isWinner?' <i class="ti ti-trophy" style="font-size:14px;color:var(--gold);"></i>':'')+'</span>'
+      + '<span style="font-size:14px;font-weight:700;">'+ranked[i].score+'</span>'
+      + '</div>';
+  }
+  return '<div class="card">'
+    + '<p class="label">最終結果</p>'
+    + rows
+    + '<button class="primary" style="width:100%;margin-top:16px;" onclick="hyGame.resetGame()"><i class="ti ti-refresh" style="font-size:14px;margin-right:4px;vertical-align:-2px;"></i>もう一度プレイ</button>'
+    + '</div>';
+}
+
+function render(){
+  var el = document.getElementById("app");
+  var html = "";
+  if(state.screen === "setupPlayers") html = renderSetupPlayers();
+  else if(state.screen === "setupRounds") html = renderSetupRounds();
+  else if(state.screen === "roundIntro") html = renderRoundIntro();
+  else if(state.screen === "wordReveal") html = renderWordReveal();
+  else if(state.screen === "guessSelect") html = renderGuessSelect();
+  else if(state.screen === "roundResult") html = renderRoundResult();
+  else if(state.screen === "finalResults") html = renderFinalResults();
+  el.innerHTML = html;
+}
+
+window.hyGame = {
+  setPlayerCount: setPlayerCount,
+  setName: setName,
+  goSetupRounds: goSetupRounds,
+  backToPlayers: backToPlayers,
+  setLaps: setLaps,
+  startGame: startGame,
+  revealWord: revealWord,
+  toGuessSelect: toGuessSelect,
+  toggleCorrect: toggleCorrect,
+  confirmRound: confirmRound,
+  nextRoundOrFinish: nextRoundOrFinish,
+  resetGame: resetGame
+};
+
+render();
+})();
+</script>
+</body>
+</html>
