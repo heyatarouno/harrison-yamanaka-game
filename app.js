@@ -1,24 +1,81 @@
 (function(){
 
-var WORDS = [
-["りんご","果物"],["バナナ","果物"],["ぶどう","果物"],["みかん","果物"],["パイナップル","果物"],
-["メロン","果物"],["いちご","果物"],["もも","果物"],["さくらんぼ","果物"],["レモン","果物"],
-["ライオン","動物"],["パンダ","動物"],["キリン","動物"],["ペンギン","動物"],["ゾウ","動物"],
-["コアラ","動物"],["カンガルー","動物"],["イルカ","動物"],["フクロウ","動物"],["ウサギ","動物"],
-["寿司","食べ物"],["ラーメン","食べ物"],["カレー","食べ物"],["ピザ","食べ物"],["おにぎり","食べ物"],
-["たこ焼き","食べ物"],["餃子","食べ物"],["ハンバーガー","食べ物"],["アイスクリーム","食べ物"],["焼肉","食べ物"],
-["医者","職業"],["消防士","職業"],["パイロット","職業"],["美容師","職業"],["弁護士","職業"],
-["警察官","職業"],["教師","職業"],["シェフ","職業"],["漫画家","職業"],["俳優","職業"],
-["サッカー","スポーツ"],["野球","スポーツ"],["テニス","スポーツ"],["バスケットボール","スポーツ"],["水泳","スポーツ"],
-["卓球","スポーツ"],["ゴルフ","スポーツ"],["ボクシング","スポーツ"],["スキー","スポーツ"],["マラソン","スポーツ"],
-["スマートフォン","日用品"],["傘","日用品"],["自転車","日用品"],["めがね","日用品"],["腕時計","日用品"],
-["冷蔵庫","日用品"],["掃除機","日用品"],["ヘッドホン","日用品"],["タオル","日用品"],["鏡","日用品"],
-["富士山","場所"],["東京タワー","場所"],["海","場所"],["図書館","場所"],["遊園地","場所"],
-["温泉","場所"],["神社","場所"],["動物園","場所"],["空港","場所"],["映画館","場所"]
+/* ===== ワードリスト ===== */
+
+// 難易度1（簡単）：計78個（子供でもわかる、身近な単語や概念）
+var WORDS_EASY = [
+  ["りんご","果物"],["バナナ","果物"],["いちご","果物"],["みかん","果物"],["メロン","果物"],
+  ["コーラ","飲み物"],["オレンジジュース","飲み物"],["牛乳","飲み物"],["お茶","飲み物"],["水","飲み物"],
+  ["犬","動物"],["猫","動物"],["うさぎ","動物"],["ペンギン","動物"],["キリン","動物"],
+  ["ケーキ","食べ物"],["チョコレート","食べ物"],["アイスクリーム","食べ物"],["おにぎり","食べ物"],["クッキー","食べ物"],
+  ["電車","乗り物"],["自転車","乗り物"],["バス","乗り物"],["車","乗り物"],["飛行機","乗り物"],
+  ["海","場所"],["公園","場所"],["学校","場所"],["病院","場所"],["スーパー","場所"],
+  ["寿司","食べ物"],["カレー","食べ物"],["ラーメン","食べ物"],
+  ["ライオン","動物"],["パンダ","動物"],
+  ["東京タワー","場所"],["富士山","場所"],
+  ["サッカー","スポーツ"],["野球","スポーツ"],
+  ["ぶどう","果物"],["すいか","果物"],["もも","果物"],
+  ["トマト","野菜"],["にんじん","野菜"],["じゃがいも","野菜"],["たまねぎ","野菜"],["きゅうり","野菜"],
+  ["麦茶","飲み物"],["コーヒー","飲み物"],["ココア","飲み物"],
+  ["ゾウ","動物"],["サル","動物"],["ブタ","動物"],["ウマ","動物"],["コアラ","動物"],
+  ["パン","食べ物"],["うどん","食べ物"],["オムライス","食べ物"],["ハンバーグ","食べ物"],["サンドイッチ","食べ物"],
+  ["新幹線","乗り物"],["タクシー","乗り物"],["トラック","乗り物"],["ヘリコプター","乗り物"],["船","乗り物"],
+  ["動物園","場所"],["水族館","場所"],["コンビニ","場所"],["駅","場所"],["プール","場所"],
+  ["卓球","スポーツ"],["スキー","スポーツ"],
 ];
+
+// 難易度2（中間）：計60個（一般的な大人の常識、少し具体的な名詞）
+var WORDS_MEDIUM = [
+  ["ハンバーガー","食べ物"],["ピザ","食べ物"],["たこ焼き","食べ物"],["餃子","食べ物"],["焼肉","食べ物"],
+  ["医者","職業"],["消防士","職業"],["パイロット","職業"],["弁護士","職業"],["美容師","職業"],
+  ["テニス","スポーツ"],["バスケットボール","スポーツ"],["水泳","スポーツ"],["マラソン","スポーツ"],["ゴルフ","スポーツ"],
+  ["温泉","場所"],["図書館","場所"],["遊園地","場所"],["神社","場所"],["映画館","場所"],
+  ["スマートフォン","日用品"],["傘","日用品"],["めがね","日用品"],["ヘッドホン","日用品"],["腕時計","日用品"],
+  ["漫画家","職業"],["俳優","職業"],["警察官","職業"],["教師","職業"],["シェフ","職業"],
+  ["すき焼き","食べ物"],["天ぷら","食べ物"],["しゃぶしゃぶ","食べ物"],["グラタン","食べ物"],["パスタ","食べ物"],
+  ["看護師","職業"],["プログラマー","職業"],["大工","職業"],["保育士","職業"],["薬剤師","職業"],
+  ["バレーボール","スポーツ"],["ラグビー","スポーツ"],["柔道","スポーツ"],["剣道","スポーツ"],["スノーボード","スポーツ"],
+  ["美術館","場所"],["空港","場所"],["市役所","場所"],["警察署","場所"],["郵便局","場所"],
+  ["掃除機","日用品"],["冷蔵庫","日用品"],["洗濯機","日用品"],["パソコン","日用品"],["電子レンジ","日用品"],
+  ["ピアノ","楽器"],["ギター","楽器"],["バイオリン","楽器"],["ドラム","楽器"],["トランペット","楽器"]
+];
+
+// 難易度3（ニッチ・難しい）：計41個（抽象的な概念、専門用語、高度な状態など）
+var WORDS_HARD = [
+  // 歴史人物（8）
+  ["織田信長","歴史人物"],["徳川家康","歴史人物"],["豊臣秀吉","歴史人物"],["坂本龍馬","歴史人物"],["聖徳太子","歴史人物"],
+  ["西郷隆盛","歴史人物"],["源頼朝","歴史人物"],["紫式部","歴史人物"],
+  // 感情（8）
+  ["憎しみ","感情"],["孤独","感情"],["嫉妬","感情"],["後悔","感情"],["不安","感情"],
+  ["諦念","感情"],["郷愁","感情"],["焦燥","感情"],
+  // 思想（6）
+  ["民主主義","思想"],["資本主義","思想"],["実存主義","思想"],
+  ["哲学","思想"],["無常","思想"],["諸行無常","思想"],
+  // 心理（5）
+  ["同調圧力","心理"],["自己肯定感","心理"],["認知バイアス","心理"],
+  ["プラシーボ効果","心理"],["ゲシュタルト崩壊","心理"],
+  // 理論（3）
+  ["相対性理論","理論"],["超ひも理論","理論"],["進化論","理論"],
+  // 概念（3）
+  ["パラドックス","概念"],["ジレンマ","概念"],["カオス","概念"],
+  // 状態（5）
+  ["二日酔い","状態"],["時差ぼけ","状態"],["デジャヴ","状態"],["渋滞","状態"],["スランプ","状態"],
+  // 日本文化（3）
+  ["侘び寂び","日本文化"],["物の哀れ","日本文化"],["枯山水","日本文化"],
+];
+
+function getWordPool(difficulty){
+  if(difficulty === 1) return WORDS_EASY;
+  if(difficulty === 3) return WORDS_HARD;
+  return WORDS_MEDIUM;
+}
+
+/* ===== 状態 ===== */
 
 var state = {
   screen: "home",
+  difficulty: 1,
+  pendingMode: null,
   two: { countdown:3, timeLeft:180, score:0, passes:3, wordPool:[], currentWord:null, aborted:false },
   party: {
     numPlayers:3,
@@ -31,12 +88,16 @@ var state = {
     currentWord:null,
     selected:{},
     lastRound:null,
-    aborted:false
+    aborted:false,
+    revealTimeLeft:15,
+    answerTimeLeft:10
   }
 };
 
 var twoCountdownTimer = null;
 var twoGameTimer = null;
+var partyRevealTimer = null;
+var partyAnswerTimer = null;
 
 function esc(s){
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -54,6 +115,8 @@ function shuffle(arr){
 function clearAllTimers(){
   if(twoCountdownTimer){ clearInterval(twoCountdownTimer); twoCountdownTimer=null; }
   if(twoGameTimer){ clearInterval(twoGameTimer); twoGameTimer=null; }
+  if(partyRevealTimer){ clearInterval(partyRevealTimer); partyRevealTimer=null; }
+  if(partyAnswerTimer){ clearInterval(partyAnswerTimer); partyAnswerTimer=null; }
 }
 
 function goHome(){
@@ -67,24 +130,50 @@ function goHowTo(){
   render();
 }
 
-/* ---------- two-player mode ---------- */
+/* ===== 難易度選択 ===== */
+
+function selectMode(mode){
+  state.pendingMode = mode;
+  state.screen = "difficulty";
+  render();
+}
+
+function setDifficulty(d){
+  state.difficulty = d;
+  render();
+}
+
+function confirmDifficulty(){
+  if(state.pendingMode === "two"){
+    beginTwoCountdown();
+  } else {
+    state.screen = "partyPlayers";
+    render();
+  }
+}
+
+/* ===== 二人モード ===== */
 
 function popTwoWord(){
   if(state.two.wordPool.length === 0){
-    state.two.wordPool = shuffle(WORDS);
+    state.two.wordPool = shuffle(getWordPool(state.difficulty));
   }
   var pair = state.two.wordPool.pop();
   return {w: pair[0], g: pair[1]};
 }
 
 function startTwoFlow(){
+  selectMode("two");
+}
+
+function beginTwoCountdown(){
   clearAllTimers();
   state.two.countdown = 3;
   state.two.timeLeft = 180;
   state.two.score = 0;
   state.two.passes = 3;
   state.two.aborted = false;
-  state.two.wordPool = shuffle(WORDS);
+  state.two.wordPool = shuffle(getWordPool(state.difficulty));
   state.screen = "twoCountdown";
   render();
   twoCountdownTimer = setInterval(twoCountdownTick, 1000);
@@ -92,7 +181,7 @@ function startTwoFlow(){
 
 function twoCountdownTick(){
   state.two.countdown -= 1;
-  if(state.two.countdown <= 0){
+  if(state.two.countdown < 0){
     clearInterval(twoCountdownTimer);
     twoCountdownTimer = null;
     state.two.currentWord = popTwoWord();
@@ -143,7 +232,7 @@ function twoPass(){
   }
 }
 
-/* ---------- party mode ---------- */
+/* ===== パーティーモード ===== */
 
 function startPartyFlow(){
   state.party.aborted = false;
@@ -167,7 +256,7 @@ function setLaps(n){
 
 function nextPartyWord(){
   if(state.party.wordPool.length === 0){
-    state.party.wordPool = shuffle(WORDS);
+    state.party.wordPool = shuffle(getWordPool(state.difficulty));
   }
   var pair = state.party.wordPool.pop();
   return {w: pair[0], g: pair[1]};
@@ -184,7 +273,7 @@ function startParty(){
       state.party.order.push(p);
     }
   }
-  state.party.wordPool = shuffle(WORDS);
+  state.party.wordPool = shuffle(getWordPool(state.difficulty));
   state.party.roundIndex = 0;
   state.party.aborted = false;
   beginPartyRound();
@@ -198,13 +287,48 @@ function beginPartyRound(){
 }
 
 function revealPartyWord(){
+  clearAllTimers();
+  state.party.revealTimeLeft = 15;
   state.screen = "partyReveal";
+  render();
+  partyRevealTimer = setInterval(partyRevealTick, 1000);
+}
+
+function partyRevealTick(){
+  state.party.revealTimeLeft -= 1;
+  if(state.party.revealTimeLeft <= 0){
+    finishPartyReveal();
+  } else {
+    render();
+  }
+}
+
+function finishPartyReveal(){
+  if(partyRevealTimer){ clearInterval(partyRevealTimer); partyRevealTimer=null; }
+  state.party.answerTimeLeft = 10;
+  state.screen = "partyAnswering";
+  render();
+  partyAnswerTimer = setInterval(partyAnswerTick, 1000);
+}
+
+function partyAnswerTick(){
+  if(state.party.answerTimeLeft > 0){
+    state.party.answerTimeLeft -= 1;
+  } else {
+    if(partyAnswerTimer){ clearInterval(partyAnswerTimer); partyAnswerTimer=null; }
+  }
+  render();
+}
+
+function skipPartyAnswering(){
+  if(partyAnswerTimer){ clearInterval(partyAnswerTimer); partyAnswerTimer=null; }
+  state.screen = "partyGuess";
   render();
 }
 
 function toPartyGuess(){
-  state.screen = "partyGuess";
-  render();
+  if(partyRevealTimer){ clearInterval(partyRevealTimer); partyRevealTimer=null; }
+  finishPartyReveal();
 }
 
 function togglePartyCorrect(i){
@@ -222,13 +346,7 @@ function confirmPartyRound(){
     state.party.players[correctIdx[i]].score += 1;
   }
   state.party.players[harrisonIdx].score += correctIdx.length;
-  state.party.lastRound = {
-    harrisonIdx: harrisonIdx,
-    word: state.party.currentWord,
-    correctIdx: correctIdx
-  };
-  state.screen = "partyResult";
-  render();
+  nextPartyRoundOrFinish();
 }
 
 function nextPartyRoundOrFinish(){
@@ -242,12 +360,14 @@ function nextPartyRoundOrFinish(){
 }
 
 function abortParty(){
+  clearAllTimers();
   state.party.aborted = true;
   state.screen = "partyFinal";
   render();
 }
 
 function resetPartyToSetup(){
+  clearAllTimers();
   state.party.players = [];
   state.party.roundIndex = 0;
   state.party.aborted = false;
@@ -255,7 +375,7 @@ function resetPartyToSetup(){
   render();
 }
 
-/* ---------- shared UI pieces ---------- */
+/* ===== 共通UIパーツ ===== */
 
 function topBar(fnName, label){
   return '<div style="display:flex;justify-content:flex-end;margin-bottom:8px;">'
@@ -289,7 +409,18 @@ function partyProgressChip(){
     + '</div>';
 }
 
-/* ---------- render functions ---------- */
+function difficultyLabel(d){
+  if(d===1) return "EASY";
+  if(d===2) return "NORMAL";
+  return "HARD";
+}
+function difficultyDesc(d){
+  if(d===1) return "スリー、ツー、ワン、GOでゲームを始めましょうか";
+  if(d===2) return "もっと大きなヤマを狙いませんか？";
+  return "最もディフィカルトで、最もチャレンジングで、そして最もフェティッシュな難易度でいかせていただきます";
+}
+
+/* ===== レンダー ===== */
 
 function renderHome(){
   return '<div class="card" style="text-align:center;">'
@@ -302,18 +433,35 @@ function renderHome(){
 function renderHowTo(){
   return '<div class="card">'
     + '<p class="label">二人モード</p>'
-    + '<p class="muted">2人で協力プレイ。片方がハリソン山中になりお題を独特な言い回しで表現し、相方が1分間で何問正解できるか挑戦します。わからないときは「パス」が3回まで使えます。</p>'
+    + '<p class="muted">2人で協力プレイ。片方がハリソン山中になりお題を独特な言い回しで表現し、相方が3分間で何問正解できるか挑戦します。わからないときは「パス」が3回まで使えます。</p>'
     + '<p class="label">パーティーモード</p>'
-    + '<p class="muted">3〜5人で対戦。順番にハリソン山中になってお題を表現し、当てた人は1点、ハリソン山中は正解者の数だけ加点されます。決めたラウンド数だけ繰り返し、合計点が一番高い人が優勝です。</p>'
+    + '<p class="muted">3〜5人で対戦。順番にハリソン山中になってお題を表現します。ハリソン山中は<strong>15秒以内</strong>に表現し、その後回答者が<strong>10秒</strong>で同時に回答。当てた人は1点、ハリソン山中は正解者の数だけ加点されます。</p>'
+    + '<p class="label">難易度</p>'
+    + '<p class="muted">難易度1（EASY）〜3（HARD）の3段階。モード選択後に設定できます。</p>'
     + '<button style="width:100%;margin-top:4px;" onclick="hyGame.goHome()">戻る</button>'
+    + '</div>';
+}
+
+function renderDifficulty(){
+  var btns = "";
+  for(var d=1;d<=3;d++){
+    btns += '<button class="'+(state.difficulty===d?"active":"")+'" style="width:100%;margin-bottom:8px;text-align:left;padding:14px 16px;" onclick="hyGame.setDifficulty('+d+')">'
+      + '<div style="font-size:16px;font-weight:600;"><i class="ti ti-check" style="font-size:15px;margin-right:6px;vertical-align:-2px;color:var(--accent);visibility:'+(state.difficulty===d?'visible':'hidden')+';"></i>'+difficultyLabel(d)+'</div>'
+      + '<div style="font-size:13px;color:var(--text-secondary);margin-top:3px;">'+difficultyDesc(d)+'</div>'
+      + '</button>';
+  }
+  return topBar("goHome","ホームへ")
+    + '<div class="card">'
+    + '<p class="label"><i class="ti ti-adjustments" style="font-size:15px;vertical-align:-2px;margin-right:4px;"></i>難易度を選ぶ</p>'
+    + btns
+    + '<button class="primary" style="width:100%;margin-top:6px;" onclick="hyGame.confirmDifficulty()">決定<i class="ti ti-arrow-right" style="font-size:15px;margin-left:4px;vertical-align:-2px;"></i></button>'
     + '</div>';
 }
 
 function renderTwoCountdown(){
   return topBar("cancelTwoCountdown")
     + '<div class="card" style="text-align:center;">'
-    + '<p class="label">まもなくスタート</p>'
-    + '<p style="font-size:72px;font-weight:700;margin:12px 0;">'+state.two.countdown+'</p>'
+    + '<p style="font-size:72px;font-weight:700;margin:12px 0;">'+(state.two.countdown > 0 ? state.two.countdown : "GO")+'</p>'
     + '</div>';
 }
 
@@ -344,7 +492,7 @@ function renderTwoResult(){
     + '<p class="muted">使ったパス: '+usedPasses+' / 3</p>'
     + '<div style="display:flex;gap:8px;margin-top:16px;">'
     + '<button style="flex:1;" onclick="hyGame.goHome()">ホームへ</button>'
-    + '<button class="primary" style="flex:1;" onclick="hyGame.startTwoFlow()">もう一度</button>'
+    + '<button class="primary" style="flex:1;" onclick="hyGame.beginTwoCountdown()">もう一度</button>'
     + '</div></div>';
 }
 
@@ -368,6 +516,11 @@ function renderPartyPlayers(){
     var ln = lapCounts[k];
     lapBtns += '<button class="'+(state.party.laps===ln?"active":"")+'" style="flex:1;" onclick="hyGame.setLaps('+ln+')">'+ln+'</button>';
   }
+  var diffBtns = "";
+  for(var d=1;d<=3;d++){
+    var label = d===1?"EASY":d===2?"NORMAL":"HARD";
+    diffBtns += '<button class="'+(state.difficulty===d?"active":"")+'" style="flex:1;" onclick="hyGame.setDifficulty('+d+')">'+label+'</button>';
+  }
   return topBar("goHome","ホームへ")
     + '<div class="card">'
     + '<p class="label"><i class="ti ti-users" style="font-size:15px;vertical-align:-2px;margin-right:4px;"></i>人数を選ぶ</p>'
@@ -375,6 +528,8 @@ function renderPartyPlayers(){
     + inputs
     + '<p class="label" style="margin-top:14px;"><i class="ti ti-repeat" style="font-size:15px;vertical-align:-2px;margin-right:4px;"></i>何ラウンドする？（全員が1回ハリソン山中になるのが1ラウンド）</p>'
     + '<div style="display:flex;gap:8px;margin-bottom:18px;">'+lapBtns+'</div>'
+    + '<p class="label"><i class="ti ti-adjustments" style="font-size:15px;vertical-align:-2px;margin-right:4px;"></i>難易度</p>'
+    + '<div style="display:flex;gap:8px;margin-bottom:18px;">'+diffBtns+'</div>'
     + '<button class="primary" style="width:100%;margin-top:4px;" onclick="hyGame.startParty()">ゲーム開始<i class="ti ti-player-play" style="font-size:16px;margin-left:4px;vertical-align:-2px;"></i></button>'
     + '</div>';
 }
@@ -387,6 +542,7 @@ function renderPartyIntro(){
     + '<div class="card" style="text-align:center;">'
     + '<p class="label">今回のハリソン山中</p>'
     + '<p style="font-size:26px;font-weight:700;margin:0 0 16px;">'+esc(harrison.name)+'</p>'
+    + '<p class="muted" style="margin:0 0 16px;">他の人は画面を見ないでください</p>'
     + '<button class="primary" style="width:100%;" onclick="hyGame.revealPartyWord()"><i class="ti ti-eye" style="font-size:16px;margin-right:4px;vertical-align:-2px;"></i>お題を見る</button>'
     + '</div>'
     + partyScoreboard(harrisonIdx);
@@ -395,15 +551,44 @@ function renderPartyIntro(){
 function renderPartyReveal(){
   var harrisonIdx = state.party.order[state.party.roundIndex];
   var harrison = state.party.players[harrisonIdx];
+  var t = state.party.revealTimeLeft;
+  var barPct = Math.round((t/15)*100);
+  var barColor = t > 7 ? "var(--success)" : t > 4 ? "var(--gold)" : "var(--accent)";
   return topBar("abortParty")
     + partyProgressChip()
     + '<div class="card" style="text-align:center;">'
+    + '<div style="margin-bottom:14px;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+    + '<span style="font-size:14px;color:var(--text-secondary);">表現タイム</span>'
+    + '<span style="font-size:22px;font-weight:700;color:'+barColor+';">'+t+'秒</span>'
+    + '</div>'
+    + '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">'
+    + '<div style="height:100%;width:'+barPct+'%;background:'+barColor+';border-radius:4px;transition:width 0.9s linear;"></div>'
+    + '</div>'
+    + '</div>'
     + '<p class="label">ジャンル</p>'
     + '<p style="font-size:18px;margin:0 0 18px;">'+esc(state.party.currentWord.g)+'</p>'
     + '<p class="label">お題</p>'
     + '<p class="t-accent" style="font-size:36px;font-weight:700;margin:0 0 18px;">'+esc(state.party.currentWord.w)+'</p>'
-    + '<p class="muted">'+esc(harrison.name)+'さんは、このお題を「ハリソン山中」風の言い回しで表現してください。表現し終えたら次へ。</p>'
+    + ''
     + '<button class="primary" style="width:100%;" onclick="hyGame.toPartyGuess()">表現し終えた<i class="ti ti-arrow-right" style="font-size:15px;margin-left:4px;vertical-align:-2px;"></i></button>'
+    + '</div>';
+}
+
+function renderPartyAnswering(){
+  var t = state.party.answerTimeLeft;
+  var barPct = Math.round((t/10)*100);
+  var barColor = t > 5 ? "var(--success)" : t > 2 ? "var(--gold)" : "var(--accent)";
+  var timeDisplay = t > 0 ? t : '<i class="ti ti-check" style="font-size:48px;"></i>';
+  return topBar("abortParty")
+    + partyProgressChip()
+    + '<div class="card" style="text-align:center;padding:32px 22px;">'
+    + '<p style="font-size:19px;font-weight:700;margin:0 0 6px;">回答タイム</p>'
+    + '<p style="font-size:64px;font-weight:700;margin:0 0 20px;color:'+barColor+';">'+timeDisplay+'</p>'
+    + '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:20px;">'
+    + '<div style="height:100%;width:'+barPct+'%;background:'+barColor+';border-radius:4px;transition:width 0.9s linear;"></div>'
+    + '</div>'
+    + '<button class="primary" style="width:100%;" onclick="hyGame.skipPartyAnswering()">スキップ<i class="ti ti-arrow-right" style="font-size:15px;margin-left:4px;vertical-align:-2px;"></i></button>'
     + '</div>';
 }
 
@@ -425,6 +610,8 @@ function renderPartyGuess(){
   return topBar("abortParty")
     + partyProgressChip()
     + '<div class="card">'
+    + '<p class="t-accent" style="font-size:32px;font-weight:700;margin:0 0 4px;">'+esc(state.party.currentWord.w)+'</p>'
+    + '<p class="muted" style="margin:0 0 14px;">'+esc(state.party.currentWord.g)+'</p>'
     + '<p class="label">正解した人を選んでください</p>'
     + (anyOther ? rows : '<p class="muted">他のプレイヤーがいません</p>')
     + '<button class="primary" style="width:100%;margin-top:4px;" onclick="hyGame.confirmPartyRound()">確定（'+count+'人正解）<i class="ti ti-check" style="font-size:15px;margin-left:4px;vertical-align:-2px;"></i></button>'
@@ -485,14 +672,15 @@ function render(){
   var html = "";
   if(state.screen === "home") html = renderHome();
   else if(state.screen === "howto") html = renderHowTo();
+  else if(state.screen === "difficulty") html = renderDifficulty();
   else if(state.screen === "twoCountdown") html = renderTwoCountdown();
   else if(state.screen === "twoPlaying") html = renderTwoPlaying();
   else if(state.screen === "twoResult") html = renderTwoResult();
   else if(state.screen === "partyPlayers") html = renderPartyPlayers();
   else if(state.screen === "partyIntro") html = renderPartyIntro();
   else if(state.screen === "partyReveal") html = renderPartyReveal();
+  else if(state.screen === "partyAnswering") html = renderPartyAnswering();
   else if(state.screen === "partyGuess") html = renderPartyGuess();
-  else if(state.screen === "partyResult") html = renderPartyResult();
   else if(state.screen === "partyFinal") html = renderPartyFinal();
   el.innerHTML = html;
 }
@@ -500,7 +688,10 @@ function render(){
 window.hyGame = {
   goHome: goHome,
   goHowTo: goHowTo,
+  setDifficulty: setDifficulty,
+  confirmDifficulty: confirmDifficulty,
   startTwoFlow: startTwoFlow,
+  beginTwoCountdown: beginTwoCountdown,
   cancelTwoCountdown: cancelTwoCountdown,
   abortTwo: abortTwo,
   twoCorrect: twoCorrect,
@@ -512,6 +703,7 @@ window.hyGame = {
   startParty: startParty,
   revealPartyWord: revealPartyWord,
   toPartyGuess: toPartyGuess,
+  skipPartyAnswering: skipPartyAnswering,
   togglePartyCorrect: togglePartyCorrect,
   confirmPartyRound: confirmPartyRound,
   nextPartyRoundOrFinish: nextPartyRoundOrFinish,
