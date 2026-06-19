@@ -21,9 +21,9 @@ var state = {
   screen: "home",
   two: { countdown:3, timeLeft:180, score:0, passes:3, wordPool:[], currentWord:null, aborted:false },
   party: {
-    numPlayers:4,
+    numPlayers:3,
     names:["プレイヤー1","プレイヤー2","プレイヤー3","プレイヤー4","プレイヤー5"],
-    laps:2,
+    laps:1,
     players:[],
     order:[],
     roundIndex:0,
